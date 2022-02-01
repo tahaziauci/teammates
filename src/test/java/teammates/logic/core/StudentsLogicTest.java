@@ -57,6 +57,8 @@ public class StudentsLogicTest extends BaseLogicTest {
         testIsStudentsInSameTeam();
         testValidateSections();
         testUpdateStudentCascade();
+        testChangeStudentTeam();
+        testChangeStudentCourse();
     }
 
     private void testValidateSections() throws Exception {
@@ -131,8 +133,8 @@ public class StudentsLogicTest extends BaseLogicTest {
 
         String expectedInvalidTeamError =
                 String.format(StudentsLogic.ERROR_INVALID_TEAM_NAME, "Team 1.1", "Section 2", "Section 3")
-                + " "
-                + StudentsLogic.ERROR_INVALID_TEAM_NAME_INSTRUCTION;
+                        + " "
+                        + StudentsLogic.ERROR_INVALID_TEAM_NAME_INSTRUCTION;
 
         assertEquals(expectedInvalidTeamError, ee.getMessage());
     }
@@ -214,7 +216,7 @@ public class StudentsLogicTest extends BaseLogicTest {
         InvalidParametersException ipe = assertThrows(InvalidParametersException.class,
                 () -> studentsLogic.updateStudentCascade(
                         StudentAttributes.updateOptionsBuilder(finalStudent4InCourse1.getCourse(),
-                                finalStudent4InCourse1.getEmail())
+                                        finalStudent4InCourse1.getEmail())
                                 .withNewEmail("invalid email")
                                 .build()
                 ));
@@ -251,6 +253,9 @@ public class StudentsLogicTest extends BaseLogicTest {
         assertNull(responseToBeDeleted);
     }
 
+    /*
+        Test for
+     */
     @Test
     public void testRegenerateStudentRegistrationKey() throws Exception {
         ______TS("typical regeneration of course student's registration key");
@@ -411,6 +416,7 @@ public class StudentsLogicTest extends BaseLogicTest {
                 () -> studentsLogic.getStudentForCourseIdAndGoogleId("valid.course", null));
     }
 
+    @Test
     private void testGetStudentsForCourse() {
 
         ______TS("course with multiple students");
@@ -421,6 +427,7 @@ public class StudentsLogicTest extends BaseLogicTest {
         assertEquals(5, studentList.size());
         for (StudentAttributes s : studentList) {
             assertEquals(course1OfInstructor1.getId(), s.getCourse());
+            System.out.println(s.getCourse());
         }
 
         ______TS("course with 0 students");
@@ -453,6 +460,23 @@ public class StudentsLogicTest extends BaseLogicTest {
         assertTrue(studentsLogic.isStudentInAnyCourse(student1InCourse1.getGoogleId()));
     }
 
+    @Test
+    private void testChangeStudentCourse() {
+        ______TS("check current course");
+        StudentAttributes student1InCourse1 = dataBundle.students.get("student1InCourse1");
+        String originalCourse = "idOfTypicalCourse1";
+        assertEquals(student1InCourse1.getCourse(), originalCourse);
+
+        ______TS("changed course should not match original course ");
+        String updatedCourse = "testCourse2";
+        student1InCourse1.setCourse(updatedCourse);
+        assertNotEquals(student1InCourse1.getCourse(), originalCourse);
+
+        ______TS("course name should match updated course");
+        assertEquals(student1InCourse1.getCourse(), updatedCourse);
+    }
+
+    @Test
     private void testIsStudentInTeam() {
 
         ______TS("non-existent student");
@@ -470,6 +494,27 @@ public class StudentsLogicTest extends BaseLogicTest {
         ______TS("typical case");
         teamName = student1InCourse1.getTeam();
         assertTrue(studentsLogic.isStudentInTeam(course1.getId(), teamName, student1InCourse1.getEmail()));
+    }
+
+    @Test
+    private void testChangeStudentTeam() {
+        ______TS("check student not in team");
+
+        StudentAttributes student1InCourse1 = dataBundle.students.get("student1InCourse1");
+        CourseAttributes course1 = dataBundle.courses.get("typicalCourse1");
+        assertFalse(studentsLogic.isStudentInTeam(course1.getId(), "Team 1.2", student1InCourse1.getEmail()));
+
+        ______TS("check true for original team");
+        String oldTeamName = student1InCourse1.getTeam();
+        assertTrue(studentsLogic.isStudentInTeam(course1.getId(), oldTeamName, student1InCourse1.getEmail()));
+
+        ______TS("change student team -- true case");
+        student1InCourse1.setTeam("Team 1.2");
+        assertEquals("Team 1.2", student1InCourse1.getTeam());
+
+        ______TS("team should not equal old teamName");
+        assertNotEquals(oldTeamName, student1InCourse1.getTeam());
+
     }
 
     private void testIsStudentsInSameTeam() {
