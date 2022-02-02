@@ -59,6 +59,7 @@ public class StudentsLogicTest extends BaseLogicTest {
         testUpdateStudentCascade();
         testChangeStudentTeam();
         testChangeStudentCourse();
+        testChangeStudentComments();
     }
 
     private void testValidateSections() throws Exception {
@@ -278,6 +279,10 @@ public class StudentsLogicTest extends BaseLogicTest {
         assertEquals("The student with the email " + nonExistentEmail + " could not be found for the course "
                         + "with ID [" + student1InCourse1.getCourse() + "].",
                 ednee.getMessage());
+
+        ______TS("deleted student's regirstration key should not be accessible");
+        studentsLogic.deleteStudentCascade(student1InCourse1.getCourse(), student1InCourse1.getEmail());
+        assertNull(student1InCourse1.getKey());
     }
 
     private void testGetStudentForEmail() {
@@ -427,7 +432,6 @@ public class StudentsLogicTest extends BaseLogicTest {
         assertEquals(5, studentList.size());
         for (StudentAttributes s : studentList) {
             assertEquals(course1OfInstructor1.getId(), s.getCourse());
-            System.out.println(s.getCourse());
         }
 
         ______TS("course with 0 students");
@@ -536,6 +540,19 @@ public class StudentsLogicTest extends BaseLogicTest {
         StudentAttributes student5InCourse1 = dataBundle.students.get("student5InCourse1");
         assertFalse(studentsLogic.isStudentsInSameTeam(course1.getId(), student2InCourse1.getEmail(),
                 student5InCourse1.getEmail()));
+    }
+
+    @Test
+    private void testChangeStudentComments() {
+        ______TS("Original comment should not match updated comment");
+        String newComment = "updated comment for student 1";
+        StudentAttributes student1 = dataBundle.students.get("student1InCourse2");
+
+        assertNotEquals(student1.getComments(), newComment);
+
+        ______TS("Update comments for student 1 and expect test to pass");
+        student1.setComments(newComment);
+        assertEquals(student1.getComments(), newComment);
     }
 
     @Test
