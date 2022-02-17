@@ -70,6 +70,7 @@ public class CoursesLogicTest extends BaseLogicTest {
         testVerifyCourseIsPresent();
         testGetSectionsNameForCourse();
         testGetTeamsForCourse();
+        testGetTeamsForSection();
         testGetCoursesForStudentAccount();
         testCreateCourse();
         testCreateCourseAndInstructor();
@@ -252,6 +253,25 @@ public class CoursesLogicTest extends BaseLogicTest {
         ______TS("null parameter");
 
         assertThrows(AssertionError.class, () -> coursesLogic.getTeamsForCourse(null));
+    }
+
+    @Test
+    private void testGetTeamsForSection() throws EntityDoesNotExistException {
+        CourseAttributes typicalCourse = dataBundle.courses.get("typicalCourse1");
+        List section = coursesLogic.getSectionsNameForCourse(typicalCourse.getId());
+
+        ______TS("failure: wrong course id");
+        assertThrows(AssertionError.class, () -> coursesLogic.getTeamsForSection("Section 1", null));
+
+        ______TS("success: get correct number of teams for section");
+        assertEquals(1, coursesLogic.getTeamsForSection((String) section.get(0), typicalCourse.getId()).size());
+
+        ______TS("success: wrong section name should return no teams");
+       assertEquals(0, coursesLogic.getTeamsForSection("doesnotexist", typicalCourse.getId()).size());
+
+       ______TS("success: returns correct team name");
+        assertTrue(coursesLogic.getTeamsForSection((String) section.get(0), typicalCourse.getId()).get(0).contains("Team 1.1"));
+
     }
 
     private void testGetCoursesForStudentAccount() {

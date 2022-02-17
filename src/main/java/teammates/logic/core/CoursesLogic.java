@@ -233,6 +233,7 @@ public final class CoursesLogic {
      * Returns a list of {@link CourseAttributes} for all courses for a given list of instructors
      * except for courses in Recycle Bin.
      */
+
     public List<CourseAttributes> getCoursesForInstructor(List<InstructorAttributes> instructorList) {
         assert instructorList != null;
 

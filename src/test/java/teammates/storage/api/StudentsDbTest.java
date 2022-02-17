@@ -6,6 +6,7 @@ import static teammates.common.util.FieldValidator.REASON_INCORRECT_FORMAT;
 import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.AttributesDeletionQuery;
+import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.exception.EntityAlreadyExistsException;
 import teammates.common.exception.EntityDoesNotExistException;
@@ -145,6 +146,8 @@ public class StudentsDbTest extends BaseTestCaseWithLocalDatabaseAccess {
         assertTrue(isEnrollInfoSameAs(studentsDb.getStudentsForCourse(s.getCourse()).get(0), s)
                 || isEnrollInfoSameAs(studentsDb.getStudentsForCourse(s.getCourse()).get(0), s2));
         assertTrue(isEnrollInfoSameAs(studentsDb.getStudentsForTeam(s.getTeam(), s.getCourse()).get(0), s));
+
+        assertEquals(studentsDb.getAllStudentsForEmail("one.new@gmail.com").get(0), s2);
 
         ______TS("null params case");
         assertThrows(AssertionError.class, () -> studentsDb.getStudentForEmail(null, "valid@email.com"));
