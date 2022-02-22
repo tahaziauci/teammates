@@ -6,7 +6,6 @@ import static teammates.common.util.FieldValidator.REASON_INCORRECT_FORMAT;
 import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.AttributesDeletionQuery;
-import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.exception.EntityAlreadyExistsException;
 import teammates.common.exception.EntityDoesNotExistException;
@@ -379,7 +378,7 @@ public class StudentsDbTest extends BaseTestCaseWithLocalDatabaseAccess {
         studentsDb.deleteStudent(anotherStudent.getCourse(), anotherStudent.getEmail());
 
         // null params check:
-        StudentAttributes[] finalStudent = new StudentAttributes[] { s };
+        StudentAttributes[] finalStudent = new StudentAttributes[] {s};
         assertThrows(AssertionError.class,
                 () -> studentsDb.deleteStudent(null, finalStudent[0].getEmail()));
 

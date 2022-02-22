@@ -267,10 +267,11 @@ public class CoursesLogicTest extends BaseLogicTest {
         assertEquals(1, coursesLogic.getTeamsForSection((String) section.get(0), typicalCourse.getId()).size());
 
         ______TS("success: wrong section name should return no teams");
-       assertEquals(0, coursesLogic.getTeamsForSection("doesnotexist", typicalCourse.getId()).size());
+        assertEquals(0, coursesLogic.getTeamsForSection("doesnotexist", typicalCourse.getId()).size());
 
-       ______TS("success: returns correct team name");
-        assertTrue(coursesLogic.getTeamsForSection((String) section.get(0), typicalCourse.getId()).get(0).contains("Team 1.1"));
+        ______TS("success: returns correct team name");
+        assertTrue(coursesLogic.getTeamsForSection((String) section.get(0),
+                typicalCourse.getId()).get(0).contains("Team 1.1"));
 
     }
 
@@ -418,9 +419,9 @@ public class CoursesLogicTest extends BaseLogicTest {
 
         String expectedError =
                 "\"" + invalidCourse.getId() + "\" is not acceptable to TEAMMATES as a/an course ID because"
-                + " it is not in the correct format. "
-                + "A course ID can contain letters, numbers, fullstops, hyphens, underscores, and dollar signs. "
-                + "It cannot be longer than 64 characters, cannot be empty and cannot contain spaces.";
+                        + " it is not in the correct format. "
+                        + "A course ID can contain letters, numbers, fullstops, hyphens, underscores, and dollar signs. "
+                        + "It cannot be longer than 64 characters, cannot be empty and cannot contain spaces.";
 
         InvalidParametersException ipe = assertThrows(InvalidParametersException.class,
                 () -> coursesLogic.createCourseAndInstructor(i.getGoogleId(),

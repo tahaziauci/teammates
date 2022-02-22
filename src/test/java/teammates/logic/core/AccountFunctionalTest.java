@@ -1,19 +1,19 @@
 package teammates.logic.core;
 
 import org.testng.annotations.Test;
-import teammates.common.datatransfer.AttributesDeletionQuery;
+
 import teammates.common.datatransfer.InstructorPrivileges;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.exception.EntityDoesNotExistException;
 import teammates.common.util.Const;
-import teammates.storage.api.AccountsDb;
 import teammates.storage.api.InstructorsDb;
 import teammates.storage.api.StudentsDb;
 
-
+/**
+ * SUT: {@link AccountFunctionalTest}.
+ */
 public class AccountFunctionalTest extends BaseLogicTest {
-
     private final StudentsDb studentsDb = StudentsDb.inst();
     private final InstructorsLogic instructorsLogic = InstructorsLogic.inst();
     private final InstructorsDb instructorsDb = InstructorsDb.inst();
@@ -38,7 +38,6 @@ public class AccountFunctionalTest extends BaseLogicTest {
 
         studentsDb.createEntity(s);
         verifyPresentInDatabase(s);
-        StudentAttributes retrievedStudent = studentsDb.getStudentForGoogleId(s.getCourse(), s.getGoogleId());
         assertNull(studentsDb.getStudentForGoogleId(s.getCourse() + "not existing", s.getGoogleId()));
         assertNull(studentsDb.getStudentForGoogleId(s.getCourse(), s.getGoogleId() + "not existing"));
         assertNull(studentsDb.getStudentForGoogleId(s.getCourse() + "not existing", s.getGoogleId() + "not existing"));
@@ -74,7 +73,7 @@ public class AccountFunctionalTest extends BaseLogicTest {
         studentsDb.deleteStudent(s.getCourse(), s.getEmail());
 
         ______TS("failure: null params check");
-        StudentAttributes[] finalStudent = new StudentAttributes[] { s };
+        StudentAttributes[] finalStudent = new StudentAttributes[] {s};
         assertThrows(AssertionError.class,
                 () -> studentsDb.deleteStudent(null, finalStudent[0].getEmail()));
 

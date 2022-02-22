@@ -60,8 +60,6 @@ public class StudentsLogicTest extends BaseLogicTest {
         testChangeStudentTeam();
         testChangeStudentCourse();
         testChangeStudentComments();
-        testGetSectionForTeam();
-        testGetStudentsForSection();
     }
 
     private void testValidateSections() throws Exception {
@@ -744,32 +742,20 @@ public class StudentsLogicTest extends BaseLogicTest {
 
     @Test
     public void testGetSectionForTeam() {
-        CourseAttributes typicalCourse = dataBundle.courses.get("typicalCourse1");
-        StudentAttributes student = dataBundle.students.get("student1InCourse1");
+        CourseAttributes myCourse = dataBundle.courses.get("typicalCourse1");
+        StudentAttributes myStudent = dataBundle.students.get("student1InCourse1");
 
         ______TS("success: return correct section for team");
-        assertEquals("Section 1", studentsLogic.getSectionForTeam(typicalCourse.getId(), student.getTeam()));
+        assertEquals("Section 1", studentsLogic.getSectionForTeam(myCourse.getId(), myStudent.getTeam()));
 
         ______TS("success: wrong course id should return None");
-        assertEquals("None", studentsLogic.getSectionForTeam("wrong", student.getTeam()));
+        assertEquals("None", studentsLogic.getSectionForTeam("wrong", myStudent.getTeam()));
 
         ______TS("success: team with no students should return default");
-        assertEquals("None", studentsLogic.getSectionForTeam(typicalCourse.getId(), "Team 12.1"));
+        assertEquals("None", studentsLogic.getSectionForTeam(myCourse.getId(), "Team 12.1"));
 
         ______TS("success: wrong team name should return None");
-        assertEquals("None", studentsLogic.getSectionForTeam(typicalCourse.getId(), "wrong"));
-    }
-
-    @Test
-    private void testGetStudentsForSection() {
-        CourseAttributes typicalCourse = dataBundle.courses.get("typicalCourse1");
-        StudentAttributes student = dataBundle.students.get("student1InCourse1");
-
-        ______TS("success: returns the correct number of students on given section");
-        assertEquals(4, studentsLogic.getStudentsForSection("Section 1", typicalCourse.getId()).size());
-
-        ______TS("success: has the correct student present in the returned students");
-        assertTrue(studentsLogic.getStudentsForSection(student.getSection(), typicalCourse.getId()).contains(student));
+        assertEquals("None", studentsLogic.getSectionForTeam(myCourse.getId(), "wrong"));
     }
 
     @AfterClass
