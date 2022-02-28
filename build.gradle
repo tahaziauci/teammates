@@ -87,6 +87,8 @@ dependencies {
     testImplementation("org.apache.jmeter:ApacheJMeter_http:5.4.1") {
         exclude group: "org.apache.jmeter", module: "bom"
     }
+    testImplementation 'org.mockito:mockito-inline:3.12.4'
+    testImplementation 'org.mockito:mockito-junit-jupiter:3.12.4'
 
 }
 
