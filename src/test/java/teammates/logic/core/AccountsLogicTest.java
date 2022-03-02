@@ -245,6 +245,33 @@ public class AccountsLogicTest extends BaseLogicTest {
     }
 
     @Test
+    public void testValidateInstructorJoinRequest() throws Exception {
+        InstructorAttributes instructor = dataBundle.instructors.get("instructorNotYetJoinCourse");
+        String loggedInGoogleId = "AccLogicT.instr.id";
+        String[] key = new String[] {
+                getKeyForInstructor(instructor.getCourseId(), instructor.getEmail()),
+        };
+
+        ______TS("success: returns instructor back");
+        assertEquals(instructor, accountsLogic.validateInstructorJoinRequest(key[0], loggedInGoogleId));
+
+        accountsLogic.joinCourseForInstructor(key[0], loggedInGoogleId);
+
+        ______TS("failure: should throw EntityAlreadyExistsException");
+        EntityAlreadyExistsException e = assertThrows(EntityAlreadyExistsException.class,
+                () -> accountsLogic.validateInstructorJoinRequest(
+                        key[0], loggedInGoogleId));
+        assertEquals("Instructor has already joined course", e.getMessage());
+
+        ______TS("failure: wrong id should throw EntityDoesNotExistException");
+        String badKey = "badTestKey";
+        EntityDoesNotExistException d = assertThrows(EntityDoesNotExistException.class,
+                () -> accountsLogic.joinCourseForInstructor(badKey, loggedInGoogleId));
+        assertEquals("No instructor with given registration key: " + badKey,
+                d.getMessage());
+    }
+
+    @Test
     public void testJoinCourseForInstructor() throws Exception {
 
         InstructorAttributes instructor = dataBundle.instructors.get("instructorNotYetJoinCourse");
@@ -252,6 +279,7 @@ public class AccountsLogicTest extends BaseLogicTest {
         String[] key = new String[] {
                 getKeyForInstructor(instructor.getCourseId(), instructor.getEmail()),
         };
+        
 
         ______TS("failure: googleID belongs to an existing instructor in the course");
 

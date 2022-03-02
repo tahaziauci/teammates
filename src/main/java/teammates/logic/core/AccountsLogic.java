@@ -147,7 +147,7 @@ public final class AccountsLogic {
         return instructor;
     }
 
-    private InstructorAttributes validateInstructorJoinRequest(String registrationKey, String googleId)
+    public InstructorAttributes validateInstructorJoinRequest(String registrationKey, String googleId)
             throws EntityDoesNotExistException, EntityAlreadyExistsException {
         InstructorAttributes instructorForKey = instructorsLogic.getInstructorForRegistrationKey(registrationKey);
 
